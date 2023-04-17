@@ -433,7 +433,11 @@ class GATConv(MessagePassing):
             else:
                 raise
 
-        return x_j * alpha.view(-1, self.heads, 1)
+        return x_j * alpha.view(-1, self.heads, 1)  # [N_edge, heads, out_channels]
+
+    def aggregate(self, inputs, index, ptr, dim_size):
+        # Important note: since the multi-head attention mechanism, the propogate axis should be first (-3).
+        return self.aggr_module(inputs, index, ptr=ptr, dim_size=dim_size, dim=-3)
 
     def update(self, aggr_out):
         if self.concat is True:

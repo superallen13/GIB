@@ -56,7 +56,7 @@ def scatter_sample(src, index, temperature, num_nodes=None):
             torch.tensor([1.0]).to(src.device)).sample(src.size()).squeeze(-1)
     log_prob = torch.log(src+1e-16)
     logit = (log_prob + gumbel) / temperature
-    return softmax(logit, index, num_nodes)
+    return softmax(src=logit, index=index, num_nodes=num_nodes)
 
 def uniform_prior(index):
     deg = degree(index)
